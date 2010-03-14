@@ -109,7 +109,7 @@ function response(obj) {
 
   var currentDay = earliestDayMilliSeconds;
   var values = new Array();
-  while (currentDay =< todayMilliSeconds)
+  while (currentDay <= todayMilliSeconds)
   {
     if (commitsByDay.hasOwnProperty(currentDay))
     {
