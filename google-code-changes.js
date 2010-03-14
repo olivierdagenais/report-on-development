@@ -95,3 +95,5 @@ chxp=2,0,18
   var s = serializeChart(chart);
   document.getElementById('content_div').innerHTML = chartImageTemplate.replace("%CHART%", s);
 }
+
+gadgets.util.registerOnLoadHandler(getFeed);

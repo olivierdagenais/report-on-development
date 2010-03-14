@@ -43,8 +43,8 @@ limitations under the License.
   <Content type="html">
     <![CDATA[
     <div id="content_div"></div>
-    <script type="text/javascript" src="chart-encoding.js"></script>
-    <script type="text/javascript" src="google-code-changes.js"></script>
+    <script type="text/javascript" src="http://report-on-development.googlecode.com/svn/trunk/chart-encoding.js"></script>
+    <script type="text/javascript" src="http://report-on-development.googlecode.com/svn/trunk/google-code-changes.js"></script>
     ]]>
   </Content>
 </Module>
