@@ -79,15 +79,54 @@ function response(obj) {
   chart.chxt = "x,y,x";
   chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0";
 
-  // TODO: read data from feed into values
-  var values = new Array(5,3,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,2);
-  // TODO: emit these additional labels based on the feed data
-  /*
-chxl=2:|today|2009-10-04
-chxp=2,0,18
-  */
+  var commitsByDay = {};
+  var todayMilliSeconds = new Date().getTime();
+  var earliestDayMilliSeconds = todayMilliSeconds; // TODO: this might fail depending on the time zone
+  if (feed.Entry)
+  {
+    for (var i = 0; i < feed.Entry.length; i++)
+    {
+      // The feed entry Date field contains the timestamp in seconds
+      // since Jan. 1, 1970. To convert it to the milliseconds needed
+      // to initialize the JavaScript Date object with the correct date,
+      // multiply by 1000.
+      var date = new Date(feed.Entry[i].Date * 1000);
+      var dayKey = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+      if (dayKey < earliestDayMilliSeconds)
+      {
+        earliestDayMilliSeconds = dayKey;
+      }
+
+      if (!commitsByDay.hasOwnProperty(dayKey))
+      {
+        commitsByDay[dayKey] = 0;
+      }
+      commitsByDay[dayKey]++;
+    }
+  }
+
+  var milliSecondsPerDay = 1000 * 60 * 60 * 24;
+  var currentDay = earliestDayMilliSeconds;
+  var values = new Array();
+  while (currentDay < todayMilliSeconds)
+  {
+    if (commitsByDay.hasOwnProperty(currentDay))
+    {
+      values.push(commitsByDay[currentDay]);
+    }
+    else
+    {
+      values.push(0);
+    }
+    currentDay += milliSecondsPerDay;
+  }
 
   addData(chart, values);
+
+  var earliestDate = new Date(earliestDayMilliSeconds);
+  chart.chxl = "2:|today|" + earliestDate.toLocaleDateString();
+  chart.chxp = "2,0," + (values.length - 1);
+
   var s = serializeChart(chart);
   document.getElementById('content_div').innerHTML = chartImageTemplate.replace("%CHART%", s);
 }
