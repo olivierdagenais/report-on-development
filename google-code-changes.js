@@ -131,7 +131,7 @@ function response(obj) {
   addData(chart, values);
 
   var earliestDate = new Date(earliestDayMilliSeconds);
-  chart.chxl = "2:|today|" + earliestDate.toLocaleDateString();
+  chart.chxl = "2:|today|" + earliestDate.getFullYear() + "/" + earliestDate.getMonth() + "/" + earliestDate.getDate();
   chart.chxp = "2,0," + (values.length - 1);
 
   var s = serializeChart(chart);
