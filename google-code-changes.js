@@ -71,6 +71,12 @@ function beginningOfDay(date)
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
+function nextDay(date)
+{
+  // "November 31st" is converted to "December 1st", so this works
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
+}
+
 function response(obj) {
   var feed = obj.data;
 
@@ -107,19 +113,19 @@ function response(obj) {
     }
   }
 
-  var currentDay = earliestDayMilliSeconds;
+  var currentDay = new Date(earliestDayMilliSeconds);
   var values = new Array();
-  while (currentDay <= todayMilliSeconds)
+  while (currentDay.getTime() <= todayMilliSeconds)
   {
-    if (commitsByDay.hasOwnProperty(currentDay))
+    if (commitsByDay.hasOwnProperty(currentDay.getTime()))
     {
-      values.push(commitsByDay[currentDay]);
+      values.push(commitsByDay[currentDay.getTime()]);
     }
     else
     {
       values.push(0);
     }
-    currentDay += milliSecondsPerDay;
+    currentDay = nextDay(currentDay);
   }
 
   addData(chart, values);
