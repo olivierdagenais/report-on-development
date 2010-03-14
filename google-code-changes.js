@@ -49,8 +49,8 @@ function addData(chart, data)
     }
   }
   chart.chds = "0," + max;
-  chart.chxr = "0," + (len-1) + "0" + "|1,0," + max + "|2," + (len-1) + "0";
-  chart.chd = max <= 61 ? simpleEncode(data, 61) : extendedEncode(data, max);
+  chart.chxr = "0," + (len-1) + ",0" + "|1,0," + max + "|2," + (len-1) + ",0";
+  chart.chd = max <= 61 ? simpleEncode(data, max) : extendedEncode(data, max);
 }
 
 function serializeChart(chart)
