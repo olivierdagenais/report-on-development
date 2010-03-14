@@ -66,6 +66,11 @@ function serializeChart(chart)
   return s;
 }
 
+function beginningOfDay(date)
+{
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 function response(obj) {
   var feed = obj.data;
 
@@ -79,19 +84,16 @@ function response(obj) {
   chart.chxt = "x,y,x";
   chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0";
 
+  var milliSecondsPerDay = 1000 * 60 * 60 * 24;
   var commitsByDay = {};
-  var todayMilliSeconds = new Date().getTime();
-  var earliestDayMilliSeconds = todayMilliSeconds; // TODO: this might fail depending on the time zone
+  var todayMilliSeconds = beginningOfDay(new Date()).getTime();
+  var earliestDayMilliSeconds = todayMilliSeconds + milliSecondsPerDay; // "tomorrow"
   if (feed.Entry)
   {
     for (var i = 0; i < feed.Entry.length; i++)
     {
-      // The feed entry Date field contains the timestamp in seconds
-      // since Jan. 1, 1970. To convert it to the milliseconds needed
-      // to initialize the JavaScript Date object with the correct date,
-      // multiply by 1000.
-      var date = new Date(feed.Entry[i].Date * 1000);
-      var dayKey = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+      var date = new Date(feed.Entry[i].Date);
+      var dayKey = beginningOfDay(date).getTime();
       if (dayKey < earliestDayMilliSeconds)
       {
         earliestDayMilliSeconds = dayKey;
@@ -105,10 +107,9 @@ function response(obj) {
     }
   }
 
-  var milliSecondsPerDay = 1000 * 60 * 60 * 24;
   var currentDay = earliestDayMilliSeconds;
   var values = new Array();
-  while (currentDay < todayMilliSeconds)
+  while (currentDay =< todayMilliSeconds)
   {
     if (commitsByDay.hasOwnProperty(currentDay))
     {
