@@ -49,9 +49,7 @@ function addData(chart, data)
     }
   }
   chart.chds = "0," + max;
-  chart.chxr = "0," + (len-1) + "0"
-               + "|1,0," + max
-               + "|2," + (len-1) + "0";
+  chart.chxr = "0," + (len-1) + "0" + "|1,0," + max + "|2," + (len-1) + "0";
   chart.chd = max <= 61 ? simpleEncode(data, 61) : extendedEncode(data, max);
 }
 
@@ -79,9 +77,7 @@ function response(obj) {
   chart.chco = "00FF00";
   chart.chm = "B,d0efd0,0,0,0";
   chart.chxt = "x,y,x";
-  chart.chxs = "0,000000,10,0,t"
-                + "|1,000000,10,1,lt"
-                + "|2,000000,10,0";
+  chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0";
 
   // TODO: read data from feed into values
   var values = new Array(5,3,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,2);

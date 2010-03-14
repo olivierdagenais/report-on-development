@@ -33,11 +33,9 @@ function extendedEncode(arrVals, maxVal) {
     var numericVal = new Number(arrVals[i]);
 
     // Scale the value to maxVal.
-    var scaledVal = Math.round(EXTENDED_MAP_LENGTH * 
-        EXTENDED_MAP_LENGTH * numericVal/maxVal);
+    var scaledVal = Math.round(EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH * numericVal/maxVal);
 
-    if(scaledVal > EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH - 1) ||
-       scaledVal > maxVal) {
+    if(scaledVal > EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH - 1) || scaledVal > maxVal) {
       scaledVal = maxVal;
     } else if (scaledVal < 0) {
       chartData += '__';
