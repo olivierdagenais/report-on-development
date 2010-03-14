@@ -2,8 +2,7 @@
 // http://code.google.com/apis/chart/docs/data_formats.html#encoding_data
 // on 2010/03/13
 
-var simpleEncoding = 
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+var simpleEncoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 // This function scales the submitted values so that
 // maxVal becomes the highest value.
@@ -12,19 +11,17 @@ function simpleEncode(valueArray,maxValue) {
   for (var i = 0; i < valueArray.length; i++) {
     var currentValue = valueArray[i];
     if (!isNaN(currentValue) && currentValue >= 0) {
-    chartData.push(simpleEncoding.charAt(Math.round((simpleEncoding.length-1) * 
-      currentValue / maxValue)));
+      chartData.push(simpleEncoding.charAt(Math.round((simpleEncoding.length-1) * currentValue / maxValue)));
     }
-      else {
+    else {
       chartData.push('_');
-      }
+    }
   }
   return chartData.join('');
 }
 
 // Same as simple encoding, but for extended encoding.
-var EXTENDED_MAP=
-  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
+var EXTENDED_MAP = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.';
 var EXTENDED_MAP_LENGTH = EXTENDED_MAP.length;
 function extendedEncode(arrVals, maxVal) {
   var chartData = 'e:';
@@ -35,7 +32,7 @@ function extendedEncode(arrVals, maxVal) {
     // Scale the value to maxVal.
     var scaledVal = Math.round(EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH * numericVal/maxVal);
 
-    if(scaledVal > EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH - 1) || scaledVal > maxVal) {
+    if(scaledVal > EXTENDED_MAP_LENGTH * EXTENDED_MAP_LENGTH - 1 || scaledVal > maxVal) {
       scaledVal = maxVal;
     } else if (scaledVal < 0) {
       chartData += '__';
