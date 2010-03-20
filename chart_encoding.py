@@ -15,7 +15,7 @@ def is_number(s):
 
 simpleEncoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
 simpleEncodingLength = len(simpleEncoding)
-simpleRange = simpleEncodingLength - 1
+simpleRange = 1.0 * simpleEncodingLength - 1
 """
 This function scales the submitted values so that
 maxValue becomes the highest value.
@@ -38,7 +38,7 @@ def simpleEncode(valueArray, maxValue):
 
 extendedEncoding = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.'
 extendedEncodingLength = len(extendedEncoding)
-extendedRange = extendedEncodingLength * extendedEncodingLength - 1
+extendedRange = 1.0 * extendedEncodingLength * extendedEncodingLength - 1
 """
 Same as simple encoding, but for extended encoding.
 """
