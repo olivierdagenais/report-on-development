@@ -67,7 +67,7 @@ class TestGlobalFunctions(unittest.TestCase):
 </feed>
 """
         soup = BeautifulSoup(xml)
-        actual = google_code_changes.response(soup, datetime(2009, 12, 06))
+        actual = google_code_changes.response(soup, datetime(2009, 12, 05))
         self.assertEquals("<img src='http://chart.apis.google.com/chart?chof=png&chco=00FF00&chd=s:9AA9AAAAAAAA99"
                           + "&chds=0,1&chm=B,d0efd0,0,0,0&chma=30,15&chs=450x150&cht=lc&chxl=2:|today|2009/11/22"
                           + "&chxp=2,0,13&chxr=0,13,0|1,0,1,1|2,13,0"

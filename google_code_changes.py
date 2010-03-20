@@ -93,7 +93,7 @@ def response(obj, lastDay):
 
     currentDay = earliestDay
     values = [ ]
-    while currentDay < lastDay:
+    while currentDay <= lastDay:
         if currentDay in commitsByDay:
             values.append(commitsByDay[currentDay])
         else:
@@ -113,4 +113,4 @@ if __name__ == "__main__":
     projectName = sys.argv[1];
     projectPath = sys.argv[2];
     resp = getFeed(projectName, projectPath)
-    print(response(resp, datetime.now()))
+    print(response(resp, datetime.utcnow()))
