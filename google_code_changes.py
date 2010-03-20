@@ -65,7 +65,7 @@ def nextDay(date):
 class Chart:
     pass
 
-def response(obj):
+def response(obj, lastDay):
     feed = obj.first()
 
     chart = Chart()
@@ -79,8 +79,8 @@ def response(obj):
     chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0"
 
     commitsByDay = { }
-    today = beginningOfDay(datetime.now())
-    earliestDay = nextDay(today)
+    lastDay = beginningOfDay(lastDay)
+    earliestDay = nextDay(lastDay)
     for entry in feed.findAll('entry'):
         date = dateParser.parse(entry.updated.text)
         dayKey = beginningOfDay(date)
@@ -93,7 +93,7 @@ def response(obj):
 
     currentDay = earliestDay
     values = [ ]
-    while currentDay < today:
+    while currentDay < lastDay:
         if currentDay in commitsByDay:
             values.append(commitsByDay[currentDay])
         else:
@@ -113,4 +113,4 @@ if __name__ == "__main__":
     projectName = sys.argv[1];
     projectPath = sys.argv[2];
     resp = getFeed(projectName, projectPath)
-    print(response(resp))
+    print(response(resp, datetime.now()))
