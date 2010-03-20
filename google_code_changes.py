@@ -19,10 +19,9 @@ from dateutil import parser as dateParser
 import urllib
 import urllib2
 from BeautifulSoup import BeautifulSoup, CData
-from chart_encoding import simpleEncode, extendedEncode
+from Chart import Chart
 
 feedUrlTemplate = "http://code.google.com/feeds/p/%PROJECT%/svnchanges/basic?path=%PATH%";
-chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%CHART%' />";
 entries = 50;
 
 def _hesc(str):
@@ -39,31 +38,11 @@ def getFeed(projectName, projectPath):
     resp = BeautifulSoup(opener.open(feedUrl))
     return resp
 
-def addData(chart, data):
-    length = len(data)
-    max = 0
-    for datum in data:
-        if datum > max:
-            max = datum
-    chart.chds = "0," + str(max)
-    chart.chxr = "0," + str(length-1) + ",0" + "|1,0," + str(max) + ",1" + "|2," + str(length-1) + ",0"
-    chart.chd = simpleEncode(data, max) if max <= 61 else extendedEncode(data, max)
-
-def serializeChart(chart):
-    s = "chof=png"
-    for key in dir(chart):
-        if not key.startswith("__"):
-            s += "&" + key + "=" + getattr(chart, key)
-    return s
-
 def beginningOfDay(date):
     return datetime(date.year, date.month, date.day)
 
 def nextDay(date):
     return date + timedelta(days = 1)
-
-class Chart:
-    pass
 
 def response(obj, lastDay):
     feed = obj.first()
@@ -100,13 +79,12 @@ def response(obj, lastDay):
             values.append(0)
         currentDay = nextDay(currentDay)
 
-    addData(chart, values)
+    chart.addData(values)
 
     chart.chxl = "2:|today|" + str(date.year) + "/" + str(date.month) + "/" + str(date.day)
     chart.chxp = "2,0," + str(len(values) - 1)
 
-    s = serializeChart(chart)
-    html = chartImageTemplate.replace("%CHART%", s)
+    html = chart.asImgElement()
     return html
 
 if __name__ == "__main__":

@@ -10,35 +10,6 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("&lt;element attributeName=&quot;attribute&#39;s value&quot; /&gt;",
                           google_code_changes._hesc("<element attributeName=\"attribute's value\" />"))
 
-    def testaddDataSimple(self):
-        c = google_code_changes.Chart()
-        google_code_changes.addData(c, [12, 40, 39, 36, 30, 50, 44])
-        self.assertEquals("0,50", c.chds)
-        self.assertEquals("0,6,0|1,0,50,1|2,6,0", c.chxr)
-        self.assertEquals("s:Pxwsl92", c.chd)
-
-    def testaddDataExtended(self):
-        c = google_code_changes.Chart()
-        google_code_changes.addData(c, [808, 2532, 1970, 2879])
-        self.assertEquals("0,2879", c.chds)
-        self.assertEquals("0,3,0|1,0,2879,1|2,3,0", c.chxr)
-        self.assertEquals("e:R94Rry..", c.chd)
-
-    def testserializeChartEmpty(self):
-        c = google_code_changes.Chart()
-        c.name = "value"
-        self.assertEquals("chof=png&name=value", google_code_changes.serializeChart(c))
-
-    def testserializeChartOnePair(self):
-        c = google_code_changes.Chart()
-        c.name = "value"
-        self.assertEquals("chof=png&name=value", google_code_changes.serializeChart(c))
-
-    def testserializeChartWithValue(self):
-        c = google_code_changes.Chart()
-        google_code_changes.addData(c, [42])
-        self.assertEquals("chof=png&chd=s:9&chds=0,42&chxr=0,0,0|1,0,42,1|2,0,0", google_code_changes.serializeChart(c))
-
     def testbeginningOfDay(self):
         actual = google_code_changes.beginningOfDay(datetime(2010, 03, 19, 22, 21, 42))
         self.assertEquals(2010, actual.year)
