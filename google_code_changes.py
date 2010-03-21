@@ -14,16 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import sys
-from datetime import datetime, timedelta
-from dateutil import parser as dateParser
 import urllib
 import urllib2
-import collections
 from BeautifulSoup import BeautifulSoup, CData
 from Chart import Chart
+from RecentActivity import RecentActivity
 
 feedUrlTemplate = "http://code.google.com/feeds/p/%PROJECT%/svnchanges/basic?path=%PATH%";
-entries = 50;
 
 def _hesc(str):
     # '<' and '>'
@@ -39,58 +36,14 @@ def getFeed(projectName, projectPath):
     resp = BeautifulSoup(opener.open(feedUrl))
     return resp
 
-def beginningOfDay(date):
-    return datetime(date.year, date.month, date.day)
-
-def nextDay(date):
-    return date + timedelta(days = 1)
-
-def convertActivityDictionaryToValueArray(commitsByDay, earliestDay, lastDay):
-    currentDay = earliestDay
-    values = [ ]
-    while currentDay <= lastDay:
-        if currentDay in commitsByDay:
-            values.append(commitsByDay[currentDay])
-        else:
-            values.append(0)
-        currentDay = nextDay(currentDay)
-    return values
-
-def createChart(values, earliestDay):
-    chart = Chart()
-    chart.cht = "lc"
-    chart.chs = "450x150" # TODO: parameterize
-    chart.chma = "30,15"  # TODO: determine if that will be enough room
-
-    chart.chco = "00FF00"
-    chart.chm = "B,d0efd0,0,0,0"
-    chart.chxt = "x,y,x"
-    chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0"
-
-    chart.addData(values)
-
-    chart.chxl = "2:|today|" + earliestDay.strftime("%Y/%m/%d")
-    chart.chxp = "2,0," + str(len(values) - 1)
-
-    return chart
-
 def response(obj, lastDay):
     feed = obj.first()
 
-    commitsByDay = collections.defaultdict(int)
-    lastDay = beginningOfDay(lastDay)
-    earliestDay = nextDay(lastDay)
+    ra = RecentActivity(lastDay)
     for entry in feed.findAll('entry'):
-        date = dateParser.parse(entry.updated.text)
-        dayKey = beginningOfDay(date)
-        if dayKey < earliestDay:
-            earliestDay = dayKey
+        ra[entry.updated.text] += 1
 
-        commitsByDay[dayKey] += 1
-
-    values = convertActivityDictionaryToValueArray(commitsByDay, earliestDay, lastDay)
-
-    chart = createChart(values, earliestDay)
+    chart = ra.createChart()
 
     html = chart.asImgElement()
     return html
