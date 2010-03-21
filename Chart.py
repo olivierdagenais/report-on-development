@@ -19,6 +19,15 @@ import chart_encoding
 
 chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%CHART%' />";
 
+def computeAxisRanges(numValues, maxValue, chartWidth, chartHeight):
+    axes = []
+    # TODO: can add ",1" if numValues < 30 (for a chart width of 450)
+    axes.append("0," + str(numValues - 1) + ",0")
+    # TODO: the last ",1" only makes sense when maxValue is < 15 (for a chart height of 50)
+    axes.append("1,0," + str(maxValue) + ",1")
+    axes.append("2," + str(numValues - 1) + ",0")
+    return string.join(axes, "|")
+
 class Chart:
     def __init__(self):
         # TODO: accept named parameters, etc.
@@ -31,9 +40,9 @@ class Chart:
             if datum > max:
                 max = datum
         self.chds = "0," + str(max)
-        # 0,len-1,0 can have ,1 when len-1 is < 30 (for a chart width of 450)
-        # |1,0,max,1 only makes sense when max is < 15 (for a chart height of 50)
-        self.chxr = "0," + str(length-1) + ",0" + "|1,0," + str(max) + ",1" + "|2," + str(length-1) + ",0"
+
+        width, height = string.split(self.chs, 'x')
+        self.chxr = computeAxisRanges(length, max, int(width), int(height))
         self.chd = chart_encoding.simpleEncode(data, max) if max <= 61 else chart_encoding.extendedEncode(data, max)
 
     def str(self):
