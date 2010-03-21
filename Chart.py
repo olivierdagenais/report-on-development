@@ -19,13 +19,21 @@ import chart_encoding
 
 chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%CHART%' />";
 
+def axisRange(axisIndex, startVal, endVal, step = 0):
+    # startVal and endVal are integers or floats, but %f will emit "42.0000" for "42.0", while %s emits "42.0"
+    if 0 == step:
+        result = "%d,%s,%s" % ( axisIndex, startVal, endVal )
+    else:
+        result = "%d,%s,%s,%d" % ( axisIndex, startVal, endVal, step )
+    return result
+
 def computeAxisRanges(numValues, maxValue, chartWidth, chartHeight):
     axes = []
-    # TODO: can add ",1" if numValues < 30 (for a chart width of 450)
-    axes.append("0," + str(numValues - 1) + ",0")
-    # TODO: the last ",1" only makes sense when maxValue is < 15 (for a chart height of 50)
-    axes.append("1,0," + str(maxValue) + ",1")
-    axes.append("2," + str(numValues - 1) + ",0")
+    # TODO: step can be 1 if numValues < 30 (for a chart width of 450)
+    axes.append(axisRange(0, numValues - 1, 0))
+    # TODO: step of 1 only makes sense when maxValue is < 15 (for a chart height of 50)
+    axes.append(axisRange(1, 0, maxValue, 1))
+    axes.append(axisRange(2, numValues - 1, 0))
     return string.join(axes, "|")
 
 class Chart:

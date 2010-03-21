@@ -3,6 +3,11 @@ import Chart
 
 class TestGlobalFunctions(unittest.TestCase):
 
+    def testaxisRange(self):
+        self.assertEquals("0,0,0", Chart.axisRange(0, 0, 0))
+        self.assertEquals("0,0.0,42.0", Chart.axisRange(0, 0.0, 42.0, 0))
+        self.assertEquals("0,0,42,1", Chart.axisRange(0, 0, 42, 1))
+
     def testcomputeAxisRanges(self):
         actual = Chart.computeAxisRanges(1, 42, 450, 50)
         self.assertEquals("0,0,0|1,0,42,1|2,0,0", actual)
