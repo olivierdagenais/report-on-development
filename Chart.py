@@ -31,6 +31,8 @@ class Chart:
             if datum > max:
                 max = datum
         self.chds = "0," + str(max)
+        # 0,len-1,0 can have ,1 when len-1 is < 30 (for a chart width of 450)
+        # |1,0,max,1 only makes sense when max is < 15 (for a chart height of 50)
         self.chxr = "0," + str(length-1) + ",0" + "|1,0," + str(max) + ",1" + "|2," + str(length-1) + ",0"
         self.chd = chart_encoding.simpleEncode(data, max) if max <= 61 else chart_encoding.extendedEncode(data, max)
 
