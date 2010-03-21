@@ -9,23 +9,23 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("0,0,42,1", Chart.axisRange(0, 0, 42, 1))
 
     def testcomputeAxisRanges(self):
-        actual = Chart.computeAxisRanges(1, 42, 450, 50)
-        self.assertEquals("0,0,0|1,0,42,1|2,0,0", actual)
+        actual = Chart.computeAxisRanges(1, 42, 450, 150)
+        self.assertEquals("0,0,0,1|1,0,42|2,0,0", actual)
 
     def testaddDataSimple(self):
         c = Chart.Chart()
-        c.chs = "450x50"
+        c.chs = "450x150"
         c.addData([12, 40, 39, 36, 30, 50, 44])
         self.assertEquals("0,50", c.chds)
-        self.assertEquals("0,6,0|1,0,50,1|2,6,0", c.chxr)
+        self.assertEquals("0,6,0,1|1,0,50|2,6,0", c.chxr)
         self.assertEquals("s:Pxwsl92", c.chd)
 
     def testaddDataExtended(self):
         c = Chart.Chart()
-        c.chs = "450x50"
+        c.chs = "450x150"
         c.addData([808, 2532, 1970, 2879])
         self.assertEquals("0,2879", c.chds)
-        self.assertEquals("0,3,0|1,0,2879,1|2,3,0", c.chxr)
+        self.assertEquals("0,3,0,1|1,0,2879|2,3,0", c.chxr)
         self.assertEquals("e:R94Rry..", c.chd)
 
     def teststrEmpty(self):
@@ -39,9 +39,9 @@ class TestGlobalFunctions(unittest.TestCase):
 
     def teststrWithValue(self):
         c = Chart.Chart()
-        c.chs = "450x50"
+        c.chs = "450x150"
         c.addData([42])
-        self.assertEquals("chof=png&chd=s:9&chds=0,42&chs=450x50&chxr=0,0,0|1,0,42,1|2,0,0", c.str())
+        self.assertEquals("chof=png&chd=s:9&chds=0,42&chs=450x150&chxr=0,0,0,1|1,0,42|2,0,0", c.str())
 
     def testasImgElement(self):
         c = Chart.Chart()
@@ -55,7 +55,7 @@ class TestGlobalFunctions(unittest.TestCase):
                           + "&chd=s:9"
                           + "&chds=0,42"
                           + "&chs=450x150"
-                          + "&chxr=0,0,0|1,0,42,1|2,0,0"
+                          + "&chxr=0,0,0,1|1,0,42|2,0,0"
                           + "' />", actual)
 
 if __name__ == '__main__':

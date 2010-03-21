@@ -18,6 +18,8 @@ import string
 import chart_encoding
 
 chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%CHART%' />";
+minPixelsBetweenHorizontalAxisValues = 13
+minPixelsBetweenVerticalAxisValues = 13
 
 def axisRange(axisIndex, startVal, endVal, step = 0):
     # startVal and endVal are integers or floats, but %f will emit "42.0000" for "42.0", while %s emits "42.0"
@@ -29,10 +31,10 @@ def axisRange(axisIndex, startVal, endVal, step = 0):
 
 def computeAxisRanges(numValues, maxValue, chartWidth, chartHeight):
     axes = []
-    # TODO: step can be 1 if numValues < 30 (for a chart width of 450)
-    axes.append(axisRange(0, numValues - 1, 0))
-    # TODO: step of 1 only makes sense when maxValue is < 15 (for a chart height of 50)
-    axes.append(axisRange(1, 0, maxValue, 1))
+    numPixelsPerDay = chartWidth / numValues
+    axes.append(axisRange(0, numValues - 1, 0, 1 if numPixelsPerDay >= minPixelsBetweenHorizontalAxisValues else 0))
+    numPixelsPerValue = chartHeight / maxValue
+    axes.append(axisRange(1, 0, maxValue, 1 if numPixelsPerValue >= minPixelsBetweenVerticalAxisValues else 0))
     axes.append(axisRange(2, numValues - 1, 0))
     return string.join(axes, "|")
 
@@ -50,7 +52,9 @@ class Chart:
         self.chds = "0," + str(max)
 
         width, height = string.split(self.chs, 'x')
-        self.chxr = computeAxisRanges(length, max, int(width), int(height))
+        # Accounts for margins and axis labels (up to 5 significant digits on the Y axis and 2 rows on the X axis)
+        effectiveWidth, effectiveHeight = int(width) - 50, int(height) - 40
+        self.chxr = computeAxisRanges(length, max, effectiveWidth, effectiveHeight)
         self.chd = chart_encoding.simpleEncode(data, max) if max <= 61 else chart_encoding.extendedEncode(data, max)
 
     def str(self):
