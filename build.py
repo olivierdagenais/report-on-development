@@ -54,5 +54,5 @@ if __name__ == "__main__":
         if hasattr(b, arg):
             method = getattr(b, arg)
             result = result and method()
-    print "Done!"
+    print("BUILD SUCCEEDED" if result else "BUILD FAILED")
     sys.exit(not result)
