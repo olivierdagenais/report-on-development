@@ -56,9 +56,7 @@ def convertActivityDictionaryToValueArray(commitsByDay, earliestDay, lastDay):
         currentDay = nextDay(currentDay)
     return values
 
-def response(obj, lastDay):
-    feed = obj.first()
-
+def createChart(values, earliestDay):
     chart = Chart()
     chart.cht = "lc"
     chart.chs = "450x150" # TODO: parameterize
@@ -68,6 +66,16 @@ def response(obj, lastDay):
     chart.chm = "B,d0efd0,0,0,0"
     chart.chxt = "x,y,x"
     chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0"
+
+    chart.addData(values)
+
+    chart.chxl = "2:|today|" + earliestDay.strftime("%Y/%m/%d")
+    chart.chxp = "2,0," + str(len(values) - 1)
+
+    return chart
+
+def response(obj, lastDay):
+    feed = obj.first()
 
     commitsByDay = collections.defaultdict(int)
     lastDay = beginningOfDay(lastDay)
@@ -82,10 +90,7 @@ def response(obj, lastDay):
 
     values = convertActivityDictionaryToValueArray(commitsByDay, earliestDay, lastDay)
 
-    chart.addData(values)
-
-    chart.chxl = "2:|today|" + earliestDay.strftime("%Y/%m/%d")
-    chart.chxp = "2,0," + str(len(values) - 1)
+    chart = createChart(values, earliestDay)
 
     html = chart.asImgElement()
     return html
