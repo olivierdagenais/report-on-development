@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 from dateutil import parser as dateParser
 import urllib
 import urllib2
+import collections
 from BeautifulSoup import BeautifulSoup, CData
 from Chart import Chart
 
@@ -57,7 +58,7 @@ def response(obj, lastDay):
     chart.chxt = "x,y,x"
     chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0"
 
-    commitsByDay = { }
+    commitsByDay = collections.defaultdict(int)
     lastDay = beginningOfDay(lastDay)
     earliestDay = nextDay(lastDay)
     for entry in feed.findAll('entry'):
@@ -66,9 +67,7 @@ def response(obj, lastDay):
         if dayKey < earliestDay:
             earliestDay = dayKey
 
-        if dayKey not in commitsByDay:
-            commitsByDay[dayKey] = 0
-        commitsByDay[dayKey] = commitsByDay[dayKey] + 1
+        commitsByDay[dayKey] += 1
 
     currentDay = earliestDay
     values = [ ]
