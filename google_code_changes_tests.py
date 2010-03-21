@@ -1,4 +1,5 @@
-﻿from datetime import datetime
+﻿import collections
+from datetime import datetime
 from BeautifulSoup import BeautifulSoup, CData
 import unittest
 import google_code_changes
@@ -27,6 +28,18 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals(22, actual.hour)
         self.assertEquals(21, actual.minute)
         self.assertEquals(42, actual.second)
+
+    def testconvertActivityDictionaryToValueArray(self):
+        activity = collections.defaultdict(int)
+        marchFirst = datetime(2010,03,01)
+        activity[marchFirst] = 1
+        activity[datetime(2010,03,02)] = 2
+        activity[datetime(2010,03,03)] = 3
+        activity[datetime(2010,03,05)] = 5
+        activity[datetime(2010,03, 8)] = 8
+        activity[datetime(2010,03,13)] = 13
+        actual = google_code_changes.convertActivityDictionaryToValueArray(activity, marchFirst, datetime(2010,03,14))
+        self.assertEquals([1, 2, 3, 0, 5, 0, 0, 8, 0, 0, 0, 0, 13, 0], actual)
 
     def testresponse(self):
         xml = """<?xml version="1.0"?>

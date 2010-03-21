@@ -45,6 +45,17 @@ def beginningOfDay(date):
 def nextDay(date):
     return date + timedelta(days = 1)
 
+def convertActivityDictionaryToValueArray(commitsByDay, earliestDay, lastDay):
+    currentDay = earliestDay
+    values = [ ]
+    while currentDay <= lastDay:
+        if currentDay in commitsByDay:
+            values.append(commitsByDay[currentDay])
+        else:
+            values.append(0)
+        currentDay = nextDay(currentDay)
+    return values
+
 def response(obj, lastDay):
     feed = obj.first()
 
@@ -69,14 +80,7 @@ def response(obj, lastDay):
 
         commitsByDay[dayKey] += 1
 
-    currentDay = earliestDay
-    values = [ ]
-    while currentDay <= lastDay:
-        if currentDay in commitsByDay:
-            values.append(commitsByDay[currentDay])
-        else:
-            values.append(0)
-        currentDay = nextDay(currentDay)
+    values = convertActivityDictionaryToValueArray(commitsByDay, earliestDay, lastDay)
 
     chart.addData(values)
 
