@@ -41,7 +41,7 @@ class TestGlobalFunctions(unittest.TestCase):
         actual = google_code_changes.convertActivityDictionaryToValueArray(activity, marchFirst, datetime(2010,03,14))
         self.assertEquals([1, 2, 3, 0, 5, 0, 0, 8, 0, 0, 0, 0, 13, 0], actual)
 
-    def testresponse(self):
+    def testresponseTypical(self):
         xml = """<?xml version="1.0"?>
 <feed>
     <entry><updated>2009-12-05T03:13:15Z</updated></entry>
@@ -55,6 +55,20 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("<img src='http://chart.apis.google.com/chart?chof=png&chco=00FF00&chd=s:9AA9AAAAAAAA99"
                           + "&chds=0,1&chm=B,d0efd0,0,0,0&chma=30,15&chs=450x150&cht=lc&chxl=2:|today|2009/11/22"
                           + "&chxp=2,0,13&chxr=0,13,0|1,0,1,1|2,13,0"
+                          + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x' />", actual)
+
+    def testresponseWithSingleDigitMonthAndDay(self):
+        xml = """<?xml version="1.0"?>
+<feed>
+    <entry><updated>2010-01-02T03:13:15Z</updated></entry>
+    <entry><updated>2010-01-01T15:54:38</updated></entry>
+</feed>
+"""
+        soup = BeautifulSoup(xml)
+        actual = google_code_changes.response(soup, datetime(2010, 01, 02))
+        self.assertEquals("<img src='http://chart.apis.google.com/chart?chof=png&chco=00FF00&chd=s:99"
+                          + "&chds=0,1&chm=B,d0efd0,0,0,0&chma=30,15&chs=450x150&cht=lc&chxl=2:|today|2010/01/01"
+                          + "&chxp=2,0,1&chxr=0,1,0|1,0,1,1|2,1,0"
                           + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x' />", actual)
 
 if __name__ == '__main__':

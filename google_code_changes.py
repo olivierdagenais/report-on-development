@@ -84,7 +84,7 @@ def response(obj, lastDay):
 
     chart.addData(values)
 
-    chart.chxl = "2:|today|" + str(earliestDay.year) + "/" + str(earliestDay.month) + "/" + str(earliestDay.day)
+    chart.chxl = "2:|today|" + earliestDay.strftime("%Y/%m/%d")
     chart.chxp = "2,0," + str(len(values) - 1)
 
     html = chart.asImgElement()
