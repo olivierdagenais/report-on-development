@@ -14,12 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import sys
-import urllib
-import urllib2
 from datetime import datetime
-from BeautifulSoup import BeautifulSoup, CData
-from Chart import Chart
-from RecentActivity import RecentActivity
+from AtomRecentActivity import AtomRecentActivity
 
 feedUrlTemplate = "http://code.google.com/feeds/p/%PROJECT%/svnchanges/basic?path=%PATH%";
 
@@ -31,26 +27,15 @@ def _hesc(str):
 
     return str
 
-def getFeed(projectName, projectPath):
-    opener = urllib2.build_opener()
-    feedUrl = feedUrlTemplate.replace("%PROJECT%", _hesc(projectName)).replace("%PATH%", _hesc(projectPath))
-    resp = BeautifulSoup(opener.open(feedUrl))
-    return resp
-
-def response(obj, lastDay):
-    feed = obj.first()
-
-    ra = RecentActivity(lastDay)
-    for entry in feed.findAll('entry'):
-        ra[entry.updated.text] += 1
-
-    chart = ra.createChart()
-
-    html = chart.asImgElement()
-    return html
+class GoogleCodeChanges(AtomRecentActivity):
+    def __init__(self, projectName, projectPath, lastDay):
+        feedUrl = feedUrlTemplate.replace("%PROJECT%", _hesc(projectName)).replace("%PATH%", _hesc(projectPath))
+        AtomRecentActivity.__init__(self, feedUrl, lastDay)
 
 if __name__ == "__main__":
     projectName = sys.argv[1];
     projectPath = sys.argv[2];
-    resp = getFeed(projectName, projectPath)
-    print(response(resp, datetime.utcnow()))
+    gcc = GoogleCodeChanges(projectName, projectPath, datetime.utcnow())
+    gcc.fetchFeed()
+    gcc.interpretFeed()
+    print(gcc.createChartHtml())
