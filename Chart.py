@@ -17,7 +17,7 @@ import sys
 import string
 import chart_encoding
 
-chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%CHART%' />";
+chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%(params)s' width='%(width)d' height='%(height)d' />"
 minPixelsBetweenHorizontalAxisValues = 13
 minPixelsBetweenVerticalAxisValues = 13
 
@@ -43,6 +43,11 @@ class Chart:
         # TODO: accept named parameters, etc.
         pass
 
+    def getDimensions(self):
+        width, height = string.split(self.chs, 'x')
+        width, height = int(width), int(height)
+        return width, height
+
     def addData(self, data):
         length = len(data)
         max = 0
@@ -51,9 +56,9 @@ class Chart:
                 max = datum
         self.chds = "0," + str(max)
 
-        width, height = string.split(self.chs, 'x')
+        width, height = self.getDimensions()
         # Accounts for margins and axis labels (up to 5 significant digits on the Y axis and 2 rows on the X axis)
-        effectiveWidth, effectiveHeight = int(width) - 50, int(height) - 40
+        effectiveWidth, effectiveHeight = width - 50, height - 40
         self.chxr = computeAxisRanges(length, max, effectiveWidth, effectiveHeight)
         self.chd = chart_encoding.simpleEncode(data, max) if max <= 61 else chart_encoding.extendedEncode(data, max)
 
@@ -68,7 +73,8 @@ class Chart:
 
     def asImgElement(self):
         s = self.str()
-        imgElement = chartImageTemplate.replace("%CHART%", s)
+        width, height = self.getDimensions()
+        imgElement = chartImageTemplate % { "params" : s, "width" : width, "height" : height }
         return imgElement
 
 if __name__ == "__main__":

@@ -36,7 +36,8 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("<img src='http://chart.apis.google.com/chart?chof=png&chco=00FF00&chd=s:9AA9AAAAAAAA99"
                           + "&chds=0,1.0&chm=B,d0efd0,0,0,0&chma=30,15&chs=450x150&cht=lc&chxl=2:|today|2009/11/22"
                           + "&chxp=2,0,13&chxr=0,13,0,1|1,0,1.0,1|2,13,0"
-                          + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x' />", actual)
+                          + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x'"
+                          + " width='450' height='150' />", actual)
 
 if __name__ == '__main__':
     unittest.main()

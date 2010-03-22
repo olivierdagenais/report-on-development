@@ -71,7 +71,7 @@ class TestGlobalFunctions(unittest.TestCase):
                           + "&chds=0,42"
                           + "&chs=450x150"
                           + "&chxr=0,0,0,1|1,0,42|2,0,0"
-                          + "' />", actual)
+                          + "' width='450' height='150' />", actual)
 
 if __name__ == '__main__':
     unittest.main()

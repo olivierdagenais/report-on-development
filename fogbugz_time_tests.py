@@ -48,7 +48,8 @@ class TestGlobalFunctions(unittest.TestCase):
                           + "&chd=e:KPN...TRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAur"
                           + "&chds=0,23608.0&chm=B,d0efd0,0,0,0&chma=30,15&chs=450x150&cht=lc&chxl=2:|today|2010/02/25"
                           + "&chxp=2,0,23&chxr=0,23,0,1|1,0,23608.0|2,23,0"
-                          + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x' />", actual)
+                          + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x'"
+                          + " width='450' height='150' />", actual)
 
 if __name__ == '__main__':
     unittest.main()
