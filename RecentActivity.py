@@ -47,10 +47,8 @@ def convertActivityDictionaryToValueArray(activityByDay, lastDay):
         currentDay = nextDay(currentDay)
     return (earliestDay, values)
 
-def createChart(values, earliestDay):
-    chart = Chart()
+def addToChart(chart, values, earliestDay):
     chart.cht = "lc"
-    chart.chs = "450x150" # TODO: parameterize
     chart.chma = "30,15"  # TODO: determine if that will be enough room
 
     chart.chco = "00FF00"
@@ -63,12 +61,22 @@ def createChart(values, earliestDay):
     chart.chxl = "2:|today|" + earliestDay.strftime("%Y/%m/%d")
     chart.chxp = "2,0," + str(len(values) - 1)
 
+def createChart(values, earliestDay):
+    chart = Chart()
+    chart.chs = "450x150"
+
+    addToChart(chart, values, earliestDay)
+
     return chart
 
 class RecentActivity:
     def __init__(self, lastDay):
         self.lastDay = asDateKey(lastDay)
         self.activityByDay = collections.defaultdict(float)
+
+    def addToChart(self, chart):
+        earliestDay, values = convertActivityDictionaryToValueArray(self.activityByDay, self.lastDay)
+        addToChart(chart, values, earliestDay)
 
     def createChart(self):
         earliestDay, values = convertActivityDictionaryToValueArray(self.activityByDay, self.lastDay)

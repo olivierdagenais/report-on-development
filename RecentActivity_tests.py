@@ -16,6 +16,7 @@ limitations under the License.
 import collections
 from datetime import datetime
 import unittest
+import Chart
 import RecentActivity
 
 class TestGlobalFunctions(unittest.TestCase):
@@ -59,6 +60,14 @@ class TestGlobalFunctions(unittest.TestCase):
         actualEarliestDay, actualValues = RecentActivity.convertActivityDictionaryToValueArray(activity, datetime(2010,03,14))
         self.assertEquals(marchFirst, actualEarliestDay)
         self.assertEquals([1, 2, 3, 0, 5, 0, 0, 8, 0, 0, 0, 0, 13, 0], actualValues)
+
+    def testaddToChartHelperMethod(self):
+        c = Chart.Chart()
+        c.chs = "600x500"
+        RecentActivity.addToChart(c, [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1], datetime(2009, 11, 22))
+        self.assertEquals("s:9AA9AAAAAAAA99", c.chd)
+        self.assertEquals("2:|today|2009/11/22", c.chxl)
+        self.assertEquals("2,0,13", c.chxp)
 
     def testcreateChartHelperMethod(self):
         actual = RecentActivity.createChart([1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1], datetime(2009, 11, 22))
