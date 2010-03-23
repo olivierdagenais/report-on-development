@@ -58,6 +58,20 @@ class TestGlobalFunctions(unittest.TestCase):
         c.addData([42])
         self.assertEquals("chof=png&chd=s:9&chds=0,42&chs=450x150&chxr=0,0,0,1|1,0,42|2,0,0", c.str())
 
+    def testasUrl(self):
+        c = Chart.Chart()
+        c.chco = "00FF00"
+        c.chs = "450x150"
+        c.addData([42])
+        actual = c.asUrl()
+        self.assertEquals("http://chart.apis.google.com/chart?"
+                          + "chof=png"
+                          + "&chco=00FF00"
+                          + "&chd=s:9"
+                          + "&chds=0,42"
+                          + "&chs=450x150"
+                          + "&chxr=0,0,0,1|1,0,42|2,0,0", actual)
+
     def testasImgElement(self):
         c = Chart.Chart()
         c.chco = "00FF00"

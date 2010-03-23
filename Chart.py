@@ -17,7 +17,8 @@ import sys
 import string
 import chart_encoding
 
-chartImageTemplate = "<img src='http://chart.apis.google.com/chart?%(params)s' width='%(width)d' height='%(height)d' />"
+chartImageUrl = "http://chart.apis.google.com/chart?"
+chartImageTemplate = "<img src='%(url)s' width='%(width)d' height='%(height)d' />"
 minPixelsBetweenHorizontalAxisValues = 13
 minPixelsBetweenVerticalAxisValues = 13
 
@@ -71,10 +72,14 @@ class Chart:
                     s += "&" + key + "=" + attr 
         return s
 
+    def asUrl(self):
+        url = chartImageUrl + self.str()
+        return url
+
     def asImgElement(self):
-        s = self.str()
+        url = self.asUrl()
         width, height = self.getDimensions()
-        imgElement = chartImageTemplate % { "params" : s, "width" : width, "height" : height }
+        imgElement = chartImageTemplate % { "url" : url, "width" : width, "height" : height }
         return imgElement
 
 if __name__ == "__main__":
