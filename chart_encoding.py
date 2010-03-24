@@ -1,7 +1,7 @@
 ﻿"""
-Ported from code at:
+Originally ported from code at:
 http://code.google.com/apis/chart/docs/data_formats.html#encoding_data
-retrieved 2010/03/13
+retrieved 2010/03/13, but then was cleaned up, enhanced, fixed, etc.
 """
 import string
 import math
@@ -21,7 +21,7 @@ This function scales the submitted values so that
 maxValue becomes the highest value.
 """
 def simpleEncode(valueArray, maxValue):
-    chartData = ['s:']
+    chartData = []
     for currentValue in valueArray:
         if is_number(currentValue) and currentValue >= 0:
             # Scale the value to maxValue
@@ -43,7 +43,7 @@ extendedRange = 1.0 * extendedEncodingLength * extendedEncodingLength - 1
 Same as simple encoding, but for extended encoding.
 """
 def extendedEncode(valueArray, maxValue):
-    chartData = 'e:'
+    chartData = ''
     for currentValue in valueArray:
         if is_number(currentValue) and currentValue >= 0:
             # Scale the value to maxValue

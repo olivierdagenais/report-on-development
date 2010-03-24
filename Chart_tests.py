@@ -36,6 +36,16 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("0,6,0,1|1,0,50|2,6,0", c.chxr)
         self.assertEquals("s:Pxwsl92", c.chd)
 
+    def testaddDataTwoSets(self):
+        c = Chart.Chart()
+        c.chs = "450x150"
+        c.addData([12, 40, 39, 36, 30, 50, 44])
+        c.addData([44, 50, 30, 36, 39, 40, 12])
+        c.processData()
+        self.assertEquals("0,50", c.chds)
+        self.assertEquals("0,6,0,1|1,0,50|2,6,0", c.chxr)
+        self.assertEquals("s:Pxwsl92,29lswxP", c.chd)
+
     def testaddDataExtended(self):
         c = Chart.Chart()
         c.chs = "450x150"

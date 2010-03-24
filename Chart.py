@@ -42,7 +42,7 @@ def computeAxisRanges(numValues, maxValue, chartWidth, chartHeight):
 class Chart:
     def __init__(self):
         # TODO: accept named parameters, etc.
-        self.data = [ ]
+        self.dataSets = [ ]
         pass
 
     def getDimensions(self):
@@ -51,22 +51,28 @@ class Chart:
         return width, height
 
     def addData(self, data):
-        self.data = data
+        self.dataSets.append(data)
 
     def processData(self):
-        data = self.data
-        length = len(data)
-        max = 0
-        for datum in data:
-            if datum > max:
-                max = datum
-        self.chds = "0," + str(max)
+        maxLength = 0
+        maxValue = 0
+        for data in self.dataSets:
+            maxLength = max(maxLength, len(data))
+            maxValue = max(maxValue, max(data))
+
+        self.chds = "0," + str(maxValue)
 
         width, height = self.getDimensions()
         # Accounts for margins and axis labels (up to 5 significant digits on the Y axis and 2 rows on the X axis)
         effectiveWidth, effectiveHeight = width - 50, height - 40
-        self.chxr = computeAxisRanges(length, max, effectiveWidth, effectiveHeight)
-        self.chd = chart_encoding.simpleEncode(data, max) if max <= 61 else chart_encoding.extendedEncode(data, max)
+        self.chxr = computeAxisRanges(maxLength, maxValue, effectiveWidth, effectiveHeight)
+
+        prefix, encodeMethod = ("s:", chart_encoding.simpleEncode) if maxValue <= 61 else ("e:", chart_encoding.extendedEncode)
+        encodedSets = [ ]
+        for data in self.dataSets:
+            # TODO: pad data on the left to have maxLength values
+            encodedSets.append(encodeMethod(data, maxValue))
+        self.chd = prefix + string.join(encodedSets, ',')
 
     def str(self):
         self.processData()
