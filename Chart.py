@@ -42,6 +42,7 @@ def computeAxisRanges(numValues, maxValue, chartWidth, chartHeight):
 class Chart:
     def __init__(self):
         # TODO: accept named parameters, etc.
+        self.data = [ ]
         pass
 
     def getDimensions(self):
@@ -50,6 +51,10 @@ class Chart:
         return width, height
 
     def addData(self, data):
+        self.data = data
+
+    def processData(self):
+        data = self.data
         length = len(data)
         max = 0
         for datum in data:
@@ -64,6 +69,7 @@ class Chart:
         self.chd = chart_encoding.simpleEncode(data, max) if max <= 61 else chart_encoding.extendedEncode(data, max)
 
     def str(self):
+        self.processData()
         s = "chof=png"
         for key in dir(self):
             if not key.startswith("__"):
