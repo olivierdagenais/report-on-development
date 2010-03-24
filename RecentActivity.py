@@ -31,12 +31,14 @@ def beginningOfDay(date):
 def nextDay(date):
     return date + timedelta(days = 1)
 
-def convertActivityDictionaryToValueArray(activityByDay, lastDay):
+def getEarliestDay(activityByDay, lastDay):
     earliestDay = nextDay(lastDay)
     for day in activityByDay.keys():
         if day < earliestDay:
             earliestDay = day
+    return earliestDay
 
+def convertActivityDictionaryToValueArray(activityByDay, earliestDay, lastDay):
     currentDay = earliestDay
     values = [ ]
     while currentDay <= lastDay:
@@ -45,7 +47,7 @@ def convertActivityDictionaryToValueArray(activityByDay, lastDay):
         else:
             values.append(0)
         currentDay = nextDay(currentDay)
-    return (earliestDay, values)
+    return values
 
 def addToChart(chart, values, earliestDay):
     chart.cht = "lc"
@@ -75,14 +77,19 @@ class RecentActivity:
         self.activityByDay = collections.defaultdict(float)
 
     def addToChart(self, chart):
-        earliestDay, values = convertActivityDictionaryToValueArray(self.activityByDay, self.lastDay)
+        earliestDay = self.getEarliestDay()
+        values = convertActivityDictionaryToValueArray(self.activityByDay, earliestDay, self.lastDay)
         addToChart(chart, values, earliestDay)
 
     def createChart(self):
-        earliestDay, values = convertActivityDictionaryToValueArray(self.activityByDay, self.lastDay)
+        earliestDay = self.getEarliestDay()
+        values = convertActivityDictionaryToValueArray(self.activityByDay, earliestDay, self.lastDay)
         chart = createChart(values, earliestDay)
         return chart
 
+    def getEarliestDay(self):
+        return getEarliestDay(self.activityByDay, self.lastDay)
+        
     def __getitem__(self, date):
         return self.activityByDay[asDateKey(date)]
 

@@ -57,8 +57,9 @@ class TestGlobalFunctions(unittest.TestCase):
         activity[datetime(2010,03,05)] = 5
         activity[datetime(2010,03, 8)] = 8
         activity[datetime(2010,03,13)] = 13
-        actualEarliestDay, actualValues = RecentActivity.convertActivityDictionaryToValueArray(activity, datetime(2010,03,14))
-        self.assertEquals(marchFirst, actualEarliestDay)
+        lastDay = datetime(2010,03,14)
+        self.assertEquals(marchFirst, RecentActivity.getEarliestDay(activity, lastDay))
+        actualValues = RecentActivity.convertActivityDictionaryToValueArray(activity, marchFirst, lastDay)
         self.assertEquals([1, 2, 3, 0, 5, 0, 0, 8, 0, 0, 0, 0, 13, 0], actualValues)
 
     def testaddToChartHelperMethod(self):
