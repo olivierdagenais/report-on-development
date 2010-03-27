@@ -17,8 +17,8 @@ import sys
 from fogbugz import FogBugz
 from datetime import datetime, timedelta
 from dateutil import parser as dateParser
-from Chart import Chart
 from RecentActivity import RecentActivity
+from RecentActivityCollection import RecentActivityCollection
 
 def getData(fogBugzUrl, userName, password, today):
     oneMonthAgo = today - timedelta(days = 28)
@@ -44,12 +44,13 @@ def response(resp, lastDay):
         interval = dtEnd - dtStart
         ra[dtStart] += interval.seconds
 
-    chart = ra.createChart()
-
-    html = chart.asImgElement()
-    return html
+    return ra
 
 if __name__ == "__main__":
     today = dateParser.parse(sys.argv[1])
     resp = getData(sys.argv[2], sys.argv[3], sys.argv[4], today)
-    print(response(resp, today))
+    ra = response(resp, today)
+    rac = RecentActivityCollection(450, 150)
+    rac.append(ra)
+    chart = rac.renderChart()
+    print(chart.asImgElement())

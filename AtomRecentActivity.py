@@ -19,6 +19,7 @@ import urllib2
 from datetime import datetime
 from BeautifulSoup import BeautifulSoup, CData
 from RecentActivity import RecentActivity
+from RecentActivityCollection import RecentActivityCollection
 
 class AtomRecentActivity:
     def __init__(self, feedUrl, lastDay):
@@ -38,14 +39,12 @@ class AtomRecentActivity:
     def logEntryAsActivity(self, entry):
         self.recentActivity[entry.updated.text] += 1
 
-    def createChartHtml(self):
-        chart = self.recentActivity.createChart()
-        html = chart.asImgElement()
-        return html
-
 if __name__ == "__main__":
     feedUrl = sys.argv[1]
     ara = AtomRecentActivity(feedUrl, datetime.utcnow())
     ara.fetchFeed()
     ara.interpretFeed()
-    print(ara.createChartHtml())
+    rac = RecentActivityCollection(450, 150)
+    rac.append(ara.recentActivity)
+    chart = rac.renderChart()
+    print(chart.asImgElement())

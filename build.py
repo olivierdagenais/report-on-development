@@ -57,7 +57,7 @@ class Build:
             module = __import__(moduleName)
             tests = loader.loadTestsFromModule(module)
             runner = unittest.TextTestRunner()
-            result = result and runner.run(tests).wasSuccessful()
+            result = runner.run(tests).wasSuccessful() and result
             print("")
 
         return result

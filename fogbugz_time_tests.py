@@ -44,12 +44,11 @@ class TestGlobalFunctions(unittest.TestCase):
         soup = BeautifulSoup(xml)
         resp = soup.response
         actual = fogbugz_time.response(resp, datetime(2010, 03, 20))
-        self.assertEquals("<img src='http://chart.apis.google.com/chart?chof=png&chco=00FF00"
-                          + "&chd=e:KPN...TRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAur"
-                          + "&chds=0,23608.0&chm=B,d0efd0,0,0,0&chma=30,15&chs=450x150&cht=lc&chxl=2:|today|2010/02/25"
-                          + "&chxp=2,0,23&chxr=0,23,0,1|1,0,23608.0|2,23,0"
-                          + "&chxs=0,000000,10,0,t|1,000000,10,1,lt|2,000000,10,0&chxt=x,y,x'"
-                          + " width='450' height='150' />", actual)
+        self.assertTrue("2010/02/25" in actual)
+        self.assertTrue("2010/02/26" in actual)
+        self.assertEquals(23608.0, actual["2010/02/27"])
+        self.assertTrue("2010/02/28" in actual)
+        self.assertTrue("2010/03/20" in actual)
 
 if __name__ == '__main__':
     unittest.main()

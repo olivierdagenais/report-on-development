@@ -18,7 +18,6 @@ import sys
 from datetime import datetime, timedelta
 from dateutil import parser as dateParser
 import collections
-from Chart import Chart
 
 def asDateKey(date):
     if isinstance(date, basestring):
@@ -49,43 +48,15 @@ def convertActivityDictionaryToValueArray(activityByDay, earliestDay, lastDay):
         currentDay = nextDay(currentDay)
     return values
 
-def addToChart(chart, values, earliestDay):
-    chart.cht = "lc"
-    chart.chma = "30,15"  # TODO: determine if that will be enough room
-
-    chart.chco = "00FF00"
-    chart.chm = "B,d0efd0,0,0,0"
-    chart.chxt = "x,y,x"
-    chart.chxs = "0,000000,10,0,t" + "|1,000000,10,1,lt" + "|2,000000,10,0"
-
-    chart.addData(values)
-
-    chart.chxl = "2:|today|" + earliestDay.strftime("%Y/%m/%d")
-    chart.chxp = "2,0," + str(len(values) - 1)
-
-def createChart(values, earliestDay):
-    chart = Chart()
-    chart.chs = "450x150"
-
-    addToChart(chart, values, earliestDay)
-
-    return chart
-
 class RecentActivity:
     def __init__(self, lastDay):
         self.lastDay = asDateKey(lastDay)
         self.activityByDay = collections.defaultdict(float)
 
-    def addToChart(self, chart):
+    def convertToValueArray(self):
         earliestDay = self.getEarliestDay()
         values = convertActivityDictionaryToValueArray(self.activityByDay, earliestDay, self.lastDay)
-        addToChart(chart, values, earliestDay)
-
-    def createChart(self):
-        earliestDay = self.getEarliestDay()
-        values = convertActivityDictionaryToValueArray(self.activityByDay, earliestDay, self.lastDay)
-        chart = createChart(values, earliestDay)
-        return chart
+        return values
 
     def getEarliestDay(self):
         return getEarliestDay(self.activityByDay, self.lastDay)
@@ -108,5 +79,5 @@ if __name__ == "__main__":
     for arg in sys.argv[2:]:
         (name, value) = string.split(arg, '=')
         ra[name] = value
-    c = ra.createChart()
-    print(c.str())
+    va = ra.convertToValueArray()
+    print(va)

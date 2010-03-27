@@ -16,7 +16,6 @@ limitations under the License.
 import collections
 from datetime import datetime
 import unittest
-import Chart
 import RecentActivity
 
 class TestGlobalFunctions(unittest.TestCase):
@@ -59,43 +58,17 @@ class TestGlobalFunctions(unittest.TestCase):
         activity[datetime(2010,03,13)] = 13
         lastDay = datetime(2010,03,14)
         self.assertEquals(marchFirst, RecentActivity.getEarliestDay(activity, lastDay))
-        actualValues = RecentActivity.convertActivityDictionaryToValueArray(activity, marchFirst, lastDay)
-        self.assertEquals([1, 2, 3, 0, 5, 0, 0, 8, 0, 0, 0, 0, 13, 0], actualValues)
+        actual = RecentActivity.convertActivityDictionaryToValueArray(activity, marchFirst, lastDay)
+        self.assertEquals([1, 2, 3, 0, 5, 0, 0, 8, 0, 0, 0, 0, 13, 0], actual)
 
-    def testaddToChartHelperMethod(self):
-        c = Chart.Chart()
-        c.chs = "600x500"
-        RecentActivity.addToChart(c, [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1], datetime(2009, 11, 22))
-        c.processData()
-        self.assertEquals("s:9AA9AAAAAAAA99", c.chd)
-        self.assertEquals("2:|today|2009/11/22", c.chxl)
-        self.assertEquals("2,0,13", c.chxp)
-
-    def testcreateChartHelperMethod(self):
-        actual = RecentActivity.createChart([1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1], datetime(2009, 11, 22))
-        actual.processData()
-        self.assertEquals("s:9AA9AAAAAAAA99", actual.chd)
-        self.assertEquals("2:|today|2009/11/22", actual.chxl)
-        self.assertEquals("2,0,13", actual.chxp)
-
-    def testcreateChartInstanceMethod(self):
+    def testconvertToValueArray(self):
         ra = RecentActivity.RecentActivity("2009/12/05")
         ra["2009-12-05T03:13:15Z"] = 1
         ra["2009-12-04T15:54:38Z"] = 1
         ra["2009-11-25T22:56:03Z"] = 1
         ra["2009-11-22T20:18:28Z"] = 1
-        actual = ra.createChart()
-        actual.processData()
-        self.assertEquals("s:9AA9AAAAAAAA99", actual.chd)
-        self.assertEquals("2:|today|2009/11/22", actual.chxl)
-        self.assertEquals("2,0,13", actual.chxp)
-
-    def testcreateChartWithSingleDigitMonthAndDay(self):
-        actual = RecentActivity.createChart([1, 1], datetime(2010, 01, 01))
-        actual.processData()
-        self.assertEquals("s:99", actual.chd)
-        self.assertEquals("2:|today|2010/01/01", actual.chxl)
-        self.assertEquals("2,0,1", actual.chxp)
+        actual = ra.convertToValueArray()
+        self.assertEquals([1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1], actual)
 
 if __name__ == '__main__':
     unittest.main()
