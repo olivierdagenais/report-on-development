@@ -28,14 +28,12 @@ def _hesc(str):
     return str
 
 class GoogleCodeChanges(AtomRecentActivity):
-    def __init__(self, projectName, projectPath, lastDay):
+    def __init__(self, lastDay, projectName, projectPath):
         feedUrl = feedUrlTemplate.replace("%PROJECT%", _hesc(projectName)).replace("%PATH%", _hesc(projectPath))
-        AtomRecentActivity.__init__(self, feedUrl, lastDay)
+        AtomRecentActivity.__init__(self, lastDay, feedUrl)
 
 if __name__ == "__main__":
     projectName = sys.argv[1];
     projectPath = sys.argv[2];
-    gcc = GoogleCodeChanges(projectName, projectPath, datetime.utcnow())
-    gcc.fetchFeed()
-    gcc.interpretFeed()
-    print(gcc.createChartHtml())
+    gcc = GoogleCodeChanges(datetime.utcnow(), projectName, projectPath)
+    gcc.printTestChartHtml()

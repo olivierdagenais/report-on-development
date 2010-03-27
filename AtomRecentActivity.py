@@ -18,20 +18,18 @@ import urllib
 import urllib2
 from datetime import datetime
 from BeautifulSoup import BeautifulSoup, CData
-from RecentActivity import RecentActivity
-from RecentActivityCollection import RecentActivityCollection
+from RecentActivitySource import RecentActivitySource
 
-class AtomRecentActivity:
-    def __init__(self, feedUrl, lastDay):
+class AtomRecentActivity(RecentActivitySource):
+    def __init__(self, lastDay, feedUrl):
+        RecentActivitySource.__init__(self, lastDay)
         self.feedUrl = feedUrl
-        self.lastDay = lastDay
 
-    def fetchFeed(self):
+    def collectData(self):
         opener = urllib2.build_opener()
         self.feedXml = BeautifulSoup(opener.open(self.feedUrl))
 
-    def interpretFeed(self):
-        self.recentActivity = RecentActivity(self.lastDay)
+    def interpretData(self):
         feed = self.feedXml.first()
         for entry in feed.findAll('entry'):
             self.logEntryAsActivity(entry)
@@ -41,10 +39,5 @@ class AtomRecentActivity:
 
 if __name__ == "__main__":
     feedUrl = sys.argv[1]
-    ara = AtomRecentActivity(feedUrl, datetime.utcnow())
-    ara.fetchFeed()
-    ara.interpretFeed()
-    rac = RecentActivityCollection(450, 150)
-    rac.append(ara.recentActivity)
-    chart = rac.renderChart()
-    print(chart.asImgElement())
+    ara = AtomRecentActivity(datetime.utcnow(), feedUrl)
+    ara.printTestChartHtml()

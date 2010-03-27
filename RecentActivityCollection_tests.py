@@ -22,25 +22,22 @@ import RecentActivity
 
 class TestGlobalFunctions(unittest.TestCase):
 
-    def testrenderChart(self):
-        rac = RecentActivityCollection.RecentActivityCollection(450, 150)
-        ra = RecentActivity.RecentActivity("2009/12/05")
+    def testrenderChartData(self):
+        lastDay = "2009/12/05"
+        rac = RecentActivityCollection.RecentActivityCollection(lastDay)
+        ra = RecentActivity.RecentActivity(lastDay)
         ra["2009-12-05T03:13:15Z"] = 1
         ra["2009-12-04T15:54:38Z"] = 1
         ra["2009-11-25T22:56:03Z"] = 1
         ra["2009-11-22T20:18:28Z"] = 1
         rac.append(ra)
-        actual = rac.renderChart()
-        actual.processData()
-        self.assertEquals("s:9AA9AAAAAAAA99", actual.chd)
-        self.assertEquals("2:|today|2009/11/22", actual.chxl)
-        self.assertEquals("2,0,13", actual.chxp)
-
-    def testrenderMetadata(self):
         c = Chart.Chart()
-        RecentActivityCollection.renderMetadata(c, datetime(2010, 01, 01), 2)
-        self.assertEquals("2:|today|2010/01/01", c.chxl)
-        self.assertEquals("2,0,1", c.chxp)
+        c.chs = "450x150"
+        actualEarliestDay, actualMaxValueCount = rac.renderChartData(c)
+        c.processData()
+        self.assertEquals("s:9AA9AAAAAAAA99", c.chd)
+        self.assertEquals(datetime(2009,11,22), actualEarliestDay)
+        self.assertEquals(14, actualMaxValueCount)
 
 if __name__ == '__main__':
     unittest.main()

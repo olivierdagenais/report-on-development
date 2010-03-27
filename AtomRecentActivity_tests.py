@@ -17,7 +17,6 @@ from datetime import datetime
 from BeautifulSoup import BeautifulSoup, CData
 import unittest
 import AtomRecentActivity
-import RecentActivityCollection
 
 class TestGlobalFunctions(unittest.TestCase):
 
@@ -30,13 +29,10 @@ class TestGlobalFunctions(unittest.TestCase):
     <entry><updated>2009-11-22T20:18:28Z</updated></entry>
 </feed>
 """
-        ara = AtomRecentActivity.AtomRecentActivity("", datetime(2009, 12, 05))
+        ara = AtomRecentActivity.AtomRecentActivity(datetime(2009, 12, 05), "")
         ara.feedXml = BeautifulSoup(xml)
-        ara.interpretFeed()
-        ra = ara.recentActivity
-        rac = RecentActivityCollection.RecentActivityCollection(450, 150)
-        rac.append(ra)
-        chart = rac.renderChart()
+        ara.interpretData()
+        chart = ara.renderChart(450, 150)
         chart.processData()
         actual = chart.asImgElement()
         self.assertEquals("<img src='http://chart.apis.google.com/chart?chof=png&chco=00FF00&chd=s:9AA9AAAAAAAA99"

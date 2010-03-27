@@ -20,7 +20,7 @@ import chart_encoding
 chartImageUrl = "http://chart.apis.google.com/chart?"
 chartImageTemplate = "<img src='%(url)s' width='%(width)d' height='%(height)d' />"
 minPixelsBetweenHorizontalAxisValues = 13
-minPixelsBetweenVerticalAxisValues = 13
+minPixelsBetweenVerticalAxisValues = 10
 
 def axisRange(axisIndex, startVal, endVal, step = 0):
     # startVal and endVal are integers or floats, but %f will emit "42.0000" for "42.0", while %s emits "42.0"

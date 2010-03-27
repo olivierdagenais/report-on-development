@@ -16,13 +16,13 @@ limitations under the License.
 from datetime import datetime
 from BeautifulSoup import BeautifulSoup, CData
 import unittest
-import fogbugz_time
+import FogBugzTime
 
 class TestGlobalFunctions(unittest.TestCase):
 
     def testasIso8601zDateString(self):
-        self.assertEquals("2010-02-15T00:00:00Z", fogbugz_time.asIso8601zDateString(datetime(2010, 02, 15)))
-        self.assertEquals("2010-02-15T23:48:37Z", fogbugz_time.asIso8601zDateString(datetime(2010, 02, 15, 23, 48, 37)))
+        self.assertEquals("2010-02-15T00:00:00Z", FogBugzTime.asIso8601zDateString(datetime(2010, 02, 15)))
+        self.assertEquals("2010-02-15T23:48:37Z", FogBugzTime.asIso8601zDateString(datetime(2010, 02, 15, 23, 48, 37)))
 
     def testresponseTypical(self):
         xml = """<?xml version="1.0"?>
@@ -41,9 +41,12 @@ class TestGlobalFunctions(unittest.TestCase):
     </intervals>
 </response>
 """
+        fbt = FogBugzTime.FogBugzTime(datetime(2010, 03, 20), "", "", "")
         soup = BeautifulSoup(xml)
         resp = soup.response
-        actual = fogbugz_time.response(resp, datetime(2010, 03, 20))
+        fbt.resp = resp
+        fbt.interpretData()
+        actual = fbt.recentActivity
         self.assertTrue("2010/02/25" in actual)
         self.assertTrue("2010/02/26" in actual)
         self.assertEquals(23608.0, actual["2010/02/27"])

@@ -17,8 +17,7 @@ import sys
 from fogbugz import FogBugz
 from datetime import datetime, timedelta
 from dateutil import parser as dateParser
-from RecentActivity import RecentActivity
-from RecentActivityCollection import RecentActivityCollection
+from RecentActivitySource import RecentActivitySource
 
 def getData(fogBugzUrl, userName, password, today):
     oneMonthAgo = today - timedelta(days = 28)
@@ -35,22 +34,25 @@ def asIso8601zDateString(date):
     result = date.strftime("%Y-%m-%dT%H:%M:%SZ")
     return result
 
-def response(resp, lastDay):
-    ra = RecentActivity(lastDay)
-    for interval in resp.intervals.findAll('interval'):
-        if interval.fdeleted.text != 'false': continue
-        dtStart = dateParser.parse(interval.dtstart.text)
-        dtEnd = dateParser.parse(interval.dtend.text)
-        interval = dtEnd - dtStart
-        ra[dtStart] += interval.seconds
+class FogBugzTime(RecentActivitySource):
+    def __init__(self, lastDay, fogBugzUrl, userName, password):
+        RecentActivitySource.__init__(self, lastDay)
+        self.fogBugzUrl = fogBugzUrl
+        self.userName = userName
+        self.password = password
 
-    return ra
+    def collectData(self):
+        self.resp = getData(self.fogBugzUrl, self.userName, self.password, self.lastDay)
+
+    def interpretData(self):
+        for interval in self.resp.intervals.findAll('interval'):
+            if interval.fdeleted.text != 'false': continue
+            dtStart = dateParser.parse(interval.dtstart.text)
+            dtEnd = dateParser.parse(interval.dtend.text)
+            interval = dtEnd - dtStart
+            self.recentActivity[dtStart] += interval.seconds
 
 if __name__ == "__main__":
     today = dateParser.parse(sys.argv[1])
-    resp = getData(sys.argv[2], sys.argv[3], sys.argv[4], today)
-    ra = response(resp, today)
-    rac = RecentActivityCollection(450, 150)
-    rac.append(ra)
-    chart = rac.renderChart()
-    print(chart.asImgElement())
+    fbt = FogBugzTime(today, sys.argv[2], sys.argv[3], sys.argv[4])
+    fbt.printTestChartHtml()

@@ -13,22 +13,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import unittest
+import collections
 from datetime import datetime
-import GoogleCodeChanges
+import unittest
+import Chart
+import RecentActivitySource
+import RecentActivity
 
 class TestGlobalFunctions(unittest.TestCase):
-    def test_hesc(self):
-        self.assertEquals("", GoogleCodeChanges._hesc(""))
-        self.assertEquals("nothing special", GoogleCodeChanges._hesc("nothing special"))
-        self.assertEquals("&lt;element attributeName=&quot;attribute&#39;s value&quot; /&gt;",
-                          GoogleCodeChanges._hesc("<element attributeName=\"attribute's value\" />"))
 
-    def testconstructor(self):
-        gcc = GoogleCodeChanges.GoogleCodeChanges(datetime(2010, 03, 26), "report-on-development", "trunk")
-        self.assertEquals(
-            "http://code.google.com/feeds/p/report-on-development/svnchanges/basic?path=trunk",
-            gcc.feedUrl)
+    def testrenderMetadata(self):
+        c = Chart.Chart()
+        RecentActivitySource.renderMetadata(c, datetime(2010, 01, 01), 2)
+        self.assertEquals("2:|today|2010/01/01", c.chxl)
+        self.assertEquals("2,0,1", c.chxp)
 
 if __name__ == '__main__':
     unittest.main()
