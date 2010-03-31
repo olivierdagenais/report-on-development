@@ -49,6 +49,12 @@ class Chart:
         width, height = string.split(self.chs, 'x')
         width, height = int(width), int(height)
         return width, height
+    
+    def getEffectiveDimensions(self):
+        width, height = self.getDimensions()
+        # Accounts for margins and axis labels (up to 5 significant digits on the Y axis and 2 rows on the X axis)
+        effectiveWidth, effectiveHeight = width - 50, height - 40
+        return effectiveWidth, effectiveHeight
 
     def addData(self, data):
         self.dataSets.append(data)
@@ -57,14 +63,14 @@ class Chart:
         maxLength = 0
         maxValue = 0
         for data in self.dataSets:
-            maxLength = max(maxLength, len(data))
-            maxValue = max(maxValue, max(data))
+            length = len(data)
+            maxLength = max(maxLength, length)
+            if length > 0:
+                maxValue = max(maxValue, max(data))
 
         self.chds = "0," + str(maxValue)
 
-        width, height = self.getDimensions()
-        # Accounts for margins and axis labels (up to 5 significant digits on the Y axis and 2 rows on the X axis)
-        effectiveWidth, effectiveHeight = width - 50, height - 40
+        effectiveWidth, effectiveHeight = self.getEffectiveDimensions()
         self.chxr = computeAxisRanges(maxLength, maxValue, effectiveWidth, effectiveHeight)
 
         prefix, encodeMethod = ("s:", chart_encoding.simpleEncode) if maxValue <= 61 else ("e:", chart_encoding.extendedEncode)
@@ -80,7 +86,7 @@ class Chart:
         for key in dir(self):
             if not key.startswith("__"):
                 attr = getattr(self, key)
-                if isinstance(attr, basestring): # skip instance methods, etc.
+                if isinstance(attr, basestring) and len(attr) > 0: # skip instance methods, etc.
                     s += "&" + key + "=" + attr 
         return s
 

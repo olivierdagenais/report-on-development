@@ -1,0 +1,217 @@
+<html>
+	<head>
+		<meta http-equiv="refresh" content="2000" />
+		<title>Oli's activity per project</title>
+		<script language="javascript">
+		<!--
+			// parameters
+			var seconds_per_page = 2 * 60;
+
+			// state variables
+			var num_pages = 0;
+			var current_page = 0;
+			var pages = new Array();
+			function body_load()
+			{
+				// TODO: set a random background-image on body
+				var body = document.getElementById('body');
+				var potential_pages = body.childNodes;
+				for ( var c = 0; c < potential_pages.length; c++ )
+				{
+					var node = potential_pages[c];
+					if ( node.nodeName != '#text' )
+					{
+						pages.push(node)
+						num_pages++;
+					}
+				}
+				body_resize();
+				if ( num_pages > 0 )
+				{
+					current_page = num_pages - 1;
+					cycle();
+				}
+			}
+
+			function body_resize()
+			{
+				// hide everything, so we can measure the best display area
+				for ( var c = 0; c < num_pages; c++ )
+				{
+					var node = pages[c];
+					node.style.display = 'none';
+				}
+
+				// measure display area
+				var height = body.clientHeight;
+				var width = body.clientWidth;
+				// http://www.javascriptkit.com/javatutors/ns6update.shtml
+				// if Firefox or NS6+
+				if ( document.getElementById && !document.all )
+				{
+					// compensate for the vertical scrollbar
+					// TODO: 16 works on my computer, but Windows allows users
+					// to configure the size/width of scrollbars for
+					// accessibility purposes and thus we would need a better
+					// way to detecct
+					width -= 16;
+				}
+
+				// resize and show everything
+				for ( var c = 0; c < num_pages; c++ )
+				{
+					var node = pages[c];
+					node.style.height = height + "px";
+					node.style.width = width + "px";
+					node.style.overflowX = "hidden";
+					node.style.overflowY = "hidden";
+					node.style.display = 'block';
+				}
+				body.scrollTop = height * current_page;
+			}
+
+			function cycle()
+			{
+				inner_cycle(1);
+				window.setTimeout(cycle, seconds_per_page * 1000);
+			}
+
+			function inner_cycle(direction)
+			{
+				// TODO: this is a fixed cycle, but the user could jump back
+				// or ahead and may want to resume from there.  We could
+				// determine the current_page based on
+				// body.scrollTop MOD clientHeight
+				// and continue from there.
+				current_page += direction;
+				if ( current_page == num_pages )
+				{
+					current_page = 0;
+				}
+				else if ( current_page < 0 )
+				{
+					current_page = num_pages - 1;
+				}
+				var body = document.getElementById('body');
+				body.scrollTop = body.clientHeight * current_page;
+			}
+
+			function body_key(evt)
+			{
+				evt = (evt) ? evt : ((window.event) ? window.event : "")
+				if (evt)
+				{
+					switch(evt.keyCode)
+					{
+						case 8:		// backspace
+						case 37:	// left
+							inner_cycle(-1);
+							evt.cancelBubble = true;
+							break;
+						case 32:	// space
+						case 39:	// right
+							inner_cycle(1);
+							evt.cancelBubble = true;
+							break;
+					}
+				}
+			}
+		// -->
+		</script>
+	</head>
+	<body id="body"
+		style="margin: 0; height: 100%; width: 100%;"
+		onload="body_load()"
+		onkeyup="body_key(event)"
+		onresize="body_resize()">
+		<div align="center">
+            <h2>TODD: Test-Oriented Development and Debugging</h2>
+            <table>
+                <tr>
+                    <td align="center">
+                        <h4>Commits per day</h4>
+                        <img
+                            alt="Recent commits from Google Code"
+                            src="todd-commits-380x230.png"
+                            width="380"
+                            height="230"
+                            />
+                    </td>
+                    <td align="center">
+                        <h4>Builds per day</h4>
+                        <img
+                            alt="Recent builds from Hudson"
+                            src="todd-builds-380x230.png"
+                            width="380"
+                            height="230"
+                            />
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <h4>Seconds logged per day</h4>
+                        <img
+                            alt="Timesheet entries from FogBugz"
+                            src="todd-time-380x230.png"
+                            width="380"
+                            height="230"
+                            />
+                    </td>
+                    <td align="center">
+                        <h4>Suitability progress</h4>
+                        <img
+                            alt="Suitability scores from Pex coverage"
+                            src="todd-suitability-380x230.png"
+                            width="380"
+                            height="230"
+                            />
+                    </td>
+                </tr>
+            </table>
+		</div>
+        <div align="center">
+            <h2>Chart legends</h2>
+            <table>
+                <tr>
+                    <td>
+                        <h4>Commits per day</h4>
+                        <ul>
+                            <li><span style="font-color:00FF00;">Green</span> = good</li>
+                            <li>Lots of green per day = good</li>
+                            <li>Lots of days without any green = bad</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <h4>Builds per day</h4>
+                        <ul>
+                            <li><span style="font-color:00FF00;">Green</span> = good, <span style="font-color:FF0000;">Red</span> = oops</li>
+                            <li>Lots of green per day = good</li>
+                            <li>Lots of days without any green = bad</li>
+                            <li>Line chart instead of bar chart = bad</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h4>Seconds logged per day</h4>
+                        <ul>
+                            <li><span style="font-color:00FF00;">Green</span> = good</li>
+                            <li>Lots of green per day = good</li>
+                            <li>Lots of days without any green = bad</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <h4>Suitability progress</h4>
+                        <ul>
+                            <li><span style="font-color:000000;">Black</span> = manual effort (goal)</li>
+                            <li><span style="font-color:0000FF;">Blue</span> = automatic effort</li>
+                            <li>Blue going up = good</li>
+                            <li>Blue going up fast = better</li>
+                            <li>Black going up = probably bad</li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+	</body>
+</html>
