@@ -32,6 +32,7 @@ def axisRange(axisIndex, startVal, endVal, step = 0):
 
 def computeAxisRanges(numValues, maxValue, chartWidth, chartHeight):
     axes = []
+    if numValues == 0: return "" 
     numPixelsPerDay = chartWidth / numValues
     axes.append(axisRange(0, numValues - 1, 0, 1 if numPixelsPerDay >= minPixelsBetweenHorizontalAxisValues else 0))
     numPixelsPerValue = chartHeight / maxValue

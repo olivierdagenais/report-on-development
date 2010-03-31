@@ -50,7 +50,7 @@ class FogBugzTime(RecentActivitySource):
             dtStart = dateParser.parse(interval.dtstart.text)
             dtEnd = dateParser.parse(interval.dtend.text)
             interval = dtEnd - dtStart
-            self.recentActivity[dtStart] += interval.seconds
+            self.recentActivity[dtStart] += (interval.seconds / 3600.0)
 
 if __name__ == "__main__":
     today = dateParser.parse(sys.argv[1])

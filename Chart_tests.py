@@ -46,6 +46,11 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("0,6,0,1|1,0,50|2,6,0", c.chxr)
         self.assertEquals("s:Pxwsl92,29lswxP", c.chd)
 
+    def testprocessDataWithNoData(self):
+        c = Chart.Chart()
+        c.chs = "450x150"
+        c.processData()
+
     def testaddDataExtended(self):
         c = Chart.Chart()
         c.chs = "450x150"

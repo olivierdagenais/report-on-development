@@ -49,7 +49,7 @@ class TestGlobalFunctions(unittest.TestCase):
         actual = fbt.recentActivity
         self.assertTrue("2010/02/25" in actual)
         self.assertTrue("2010/02/26" in actual)
-        self.assertEquals(23608.0, actual["2010/02/27"])
+        self.assertEquals(6.5577777777777779, actual["2010/02/27"])
         self.assertTrue("2010/02/28" in actual)
         self.assertTrue("2010/03/20" in actual)
 
