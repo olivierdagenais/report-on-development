@@ -4,7 +4,6 @@ from shutil import copyfile
 from tempfile import mkstemp
 from os import remove, close
 
-import settings
 from FogBugzTime import FogBugzTime, asIso8601zDateString
 from GoogleCodeChanges import GoogleCodeChanges
 from HudsonBuilds import HudsonBuilds
@@ -36,6 +35,7 @@ def processAndDownload(today, dict, width, height, destFolder):
             remove(tempPath)
 
 if __name__ == '__main__':
+    import settings
     # 380x230 and then also in individual pages (600x500)
     today = datetime.utcnow()
     images = { }

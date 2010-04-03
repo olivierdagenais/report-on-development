@@ -13,9 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import os
-import sys
-import unittest
+import os, sys, traceback, unittest
 
 class Build:
     def clean(self):
@@ -65,9 +63,14 @@ class Build:
 if __name__ == "__main__":
     b = Build()
     result = True
-    for arg in sys.argv:
-        if hasattr(b, arg):
-            method = getattr(b, arg)
-            result = result and method()
-    print("BUILD SUCCEEDED" if result else "BUILD FAILED")
-    sys.exit(not result)
+    try:
+        for arg in sys.argv:
+            if hasattr(b, arg):
+                method = getattr(b, arg)
+                result = result and method()
+    except Exception, e:
+        result = False
+        traceback.print_exc(file=sys.stdout)
+    finally:
+        print("BUILD SUCCEEDED" if result else "BUILD FAILED")
+        sys.exit(not result)
