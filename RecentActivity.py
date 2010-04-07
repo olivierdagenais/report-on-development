@@ -53,8 +53,9 @@ class RecentActivity:
         self.lastDay = asDateKey(lastDay)
         self.activityByDay = collections.defaultdict(float)
 
-    def convertToValueArray(self):
-        earliestDay = self.getEarliestDay()
+    def convertToValueArray(self, earliestDay = None):
+        if earliestDay == None:
+            earliestDay = self.getEarliestDay()
         values = convertActivityDictionaryToValueArray(self.activityByDay, earliestDay, self.lastDay)
         return values
 

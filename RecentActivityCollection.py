@@ -21,12 +21,14 @@ from RecentActivitySource import RecentActivitySource
 def renderChartData(recentActivities, chart):
     first = recentActivities[0]
     earliestDay = first.getEarliestDay()
-    values = first.convertToValueArray()
+    for ra in recentActivities[1:]:
+        earliestDay = min(earliestDay, ra.getEarliestDay())
+
+    values = first.convertToValueArray(earliestDay)
     chart.addData(values)
     maxValueCount = len(values)
     for ra in recentActivities[1:]:
-        earliestDay = min(earliestDay, ra.getEarliestDay())
-        values = ra.convertToValueArray()
+        values = ra.convertToValueArray(earliestDay)
         chart.addData(values)
         maxValueCount = max(maxValueCount, len(values))
 

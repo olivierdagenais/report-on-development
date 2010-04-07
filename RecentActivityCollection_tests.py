@@ -22,7 +22,7 @@ import RecentActivity
 
 class TestGlobalFunctions(unittest.TestCase):
 
-    def testrenderChartData(self):
+    def testrenderChartDataSimple(self):
         lastDay = "2009/12/05"
         rac = RecentActivityCollection.RecentActivityCollection(lastDay)
         ra = RecentActivity.RecentActivity(lastDay)
@@ -38,6 +38,26 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertEquals("s:9AA9AAAAAAAA99", c.chd)
         self.assertEquals(datetime(2009,11,22), actualEarliestDay)
         self.assertEquals(14, actualMaxValueCount)
+
+    def testrenderChartDataTwoSetsWithDisconnectedData(self):
+        lastDay = "2010/04/06"
+        rac = RecentActivityCollection.RecentActivityCollection(lastDay)
+        firstRa = RecentActivity.RecentActivity(lastDay)
+        firstRa["2010-04-04T18:12:26Z"] = 1
+        firstRa["2009-11-22T23:01:37Z"] = 1
+        rac.append(firstRa)
+
+        secondRa = RecentActivity.RecentActivity(lastDay)
+        secondRa["2010-04-04T18:12:26Z"] = 1
+        secondRa["2010-04-03T18:18:21Z"] = 1
+        rac.append(secondRa)
+
+        c = Chart.Chart()
+        c.chs = "450x150"
+        actualEarliestDay, actualMaxValueCount = rac.renderChartData(c)
+        self.assertEquals(datetime(2009,11,22), actualEarliestDay)
+        self.assertEquals(136, len(c.dataSets[0]))
+        self.assertEquals(136, len(c.dataSets[1]))
 
 if __name__ == '__main__':
     unittest.main()
