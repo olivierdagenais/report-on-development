@@ -53,5 +53,22 @@ class TestGlobalFunctions(unittest.TestCase):
         self.assertTrue("2010/02/28" in actual)
         self.assertTrue("2010/03/20" in actual)
 
+    def testresponseHasInProgressEntry(self):
+        xml = """
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+    <intervals>
+<interval><dtStart>2010-03-20T19:43:15Z</dtStart><dtEnd>2010-03-20T22:07:48Z</dtEnd><fDeleted>false</fDeleted></interval>
+<interval><dtStart>2010-04-17T20:30:02Z</dtStart><dtEnd></dtEnd><fDeleted>false</fDeleted></interval>
+    </intervals>
+</response>
+"""
+        fbt = FogBugzTime.FogBugzTime(datetime(2010, 04, 17), "", "", "")
+        soup = BeautifulSoup(xml)
+        fbt.resp = soup.response
+        fbt.interpretData()
+        actual = fbt.recentActivity
+        self.assertTrue("2010/03/20" in actual)
+
 if __name__ == '__main__':
     unittest.main()

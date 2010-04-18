@@ -48,7 +48,10 @@ class FogBugzTime(RecentActivitySource):
         for interval in self.resp.intervals.findAll('interval'):
             if interval.fdeleted.text != 'false': continue
             dtStart = dateParser.parse(interval.dtstart.text)
-            dtEnd = dateParser.parse(interval.dtend.text)
+            endDateTime = interval.dtend.text
+            # an interval that's in progress will have no value in dtEnd
+            if 0 == len(endDateTime): continue
+            dtEnd = dateParser.parse(endDateTime)
             interval = dtEnd - dtStart
             self.recentActivity[dtStart] += (interval.seconds / 3600.0)
 
