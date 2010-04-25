@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # 380x230 and then also in individual pages (600x500)
     today = datetime.utcnow()
     images = { }
-    images["todd-commits"] = GoogleCodeChanges(today, "testoriented", "/todd/trunk")
+    images["todd-commits"] = GoogleCodeChanges(today, "testoriented", "/")
     images["todd-builds"] = HudsonBuilds(today, settings.HudsonUrl, "TODD")
     images["todd-time"] = FogBugzTime(today, settings.FogBugzUrl, settings.FogBugzUser, settings.FogBugzPassword)
     
