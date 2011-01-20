@@ -31,8 +31,11 @@ class HudsonBuilds(AtomRecentActivity):
         self.failures = RecentActivity(lastDay)
 
     def logEntryAsActivity(self, entry):
-        ra = self.successes if "(SUCCESS)" in entry.title.text else self.failures
+        ra = self.successes if self.representsSuccess(entry.title.text) else self.failures
         ra[entry.updated.text] += 1
+
+    def representsSuccess(self, titleText):
+        return (" (SUCCESS)" in titleText) or (" (stable)" in titleText) or (" (back to normal)" in titleText)
 
     def renderChartData(self, chart):
         earliestDay, maxValueCount = renderChartData([self.failures, self.successes], chart)

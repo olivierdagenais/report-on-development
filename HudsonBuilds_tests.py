@@ -25,9 +25,9 @@ class TestGlobalFunctions(unittest.TestCase):
 <feed>
     <entry><title>#35 (SUCCESS)</title><updated>2010-04-04T18:12:26Z</updated></entry>
     <entry><title>#34 (FAILURE)</title><updated>2010-04-04T14:29:06Z</updated></entry>
-    <entry><title>#33 (SUCCESS)</title><updated>2010-04-03T20:57:35Z</updated></entry>
+    <entry><title>#33 (stable)</title><updated>2010-04-03T20:57:35Z</updated></entry>
     <entry><title>#32 (FAILURE)</title><updated>2010-04-03T18:18:21Z</updated></entry>
-    <entry><title>#31 (SUCCESS)</title><updated>2010-04-03T12:54:35Z</updated></entry>
+    <entry><title>#31 (back to normal)</title><updated>2010-04-03T12:54:35Z</updated></entry>
     <entry><title>#30 (SUCCESS)</title><updated>2010-04-02T12:42:07Z</updated></entry>
     <entry><title>#29 (SUCCESS)</title><updated>2010-03-27T15:46:07Z</updated></entry>
     <entry><title>#28 (SUCCESS)</title><updated>2010-03-03T03:21:28Z</updated></entry>
